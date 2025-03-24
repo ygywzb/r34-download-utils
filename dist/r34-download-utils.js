@@ -46,43 +46,23 @@ const LS = localStorage;
 // 持久化存储已经下载的id
 const LSDownloadedManager = {
   /**
-   * 维护所有id组成的set，用于查询
-   * @type {Set<number>}
-   */
-  idSetCache: undefined,
-  /**
-   * 由于cache初始为undefined，此为初始化
-   * @returns { void }
-   */
-  initCache() {
-    const dListStr = LS.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__.DOWNLOADED_KEY);
-    if (dListStr === null) {
-      this.idSetCache = new Set();
-      return;
-    }
-    this.idSetCache = new Set(JSON.parse(dListStr));
-  },
-  /**
    * 添加id至已下载列表并保存
    * @param {number} id
    */
   add(id) {
     const dListStr = LS.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__.DOWNLOADED_KEY);
-    const dList = dListStr === null ? [] : JSON.parse(dListStr);
+    const dList = !dListStr ? [] : JSON.parse(dListStr);
     dList.push(id);
     LS.setItem(_constants__WEBPACK_IMPORTED_MODULE_0__.DOWNLOADED_KEY, JSON.stringify(dList));
-    this.idSetCache.add(id);
   },
-  /**
-   * 查询指定id是否在列表中
-   * @param {number} id
-   * @returns {boolean}
-   */
-  has(id) {
-    if (!this.idSetCache) {
-      this.initCache();
+  getSearcher() {
+    const dListStr = LS.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__.DOWNLOADED_KEY);
+    const dl = JSON.parse(dListStr);
+    if (!dListStr || sl.length === 0) {
+      return null;
     }
-    return this.idSetCache.has(id);
+    const idSet = new Set(dl);
+    return (id) => idSet.has(id);
   },
 };
 
@@ -98,23 +78,6 @@ const LSDownloadedManager = {
 // 持久化存储已经选中、待下载的信息
 const LSSelectedManager = {
   /**
-   * 维护所有id组成的set，用于查询
-   * @type {Set<number>}
-   */
-  idSetCache: undefined,
-  /**
-   * 由于cache初始为undefined，此为初始化
-   * @returns { void }
-   */
-  initCache() {
-    const dListStr = LS.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY);
-    if (dListStr === null) {
-      this.idSetCache = new Set();
-      return;
-    }
-    this.idSetCache = new Set(JSON.parse(dListStr).map((info) => videoId));
-  },
-  /**
    * 添加视频信息至待下载列表
    * @param {SelectedVideoInfo} info 视频信息
    */
@@ -122,13 +85,11 @@ const LSSelectedManager = {
     const dList = this.getList();
     dList.push(info);
     LS.setItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY, JSON.stringify(dList));
-    this.idSetCache.add(info.videoId);
   },
   /**
    * 清空列表
    */
   clear() {
-    this.idSetCache = new Set();
     LS.removeItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY);
   },
   /**
@@ -137,18 +98,16 @@ const LSSelectedManager = {
    */
   getList() {
     const dListStr = LS.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY);
-    return dListStr === null ? [] : JSON.parse(dListStr);
+    return !dListStr ? [] : JSON.parse(dListStr);
   },
-  /**
-   * 指定id是否存在于待下载列表中
-   * @param {number} id
-   * @returns {boolean}
-   */
-  has(id) {
-    if (!this.idSetCache) {
-      this.initCache();
+  getSearcher() {
+    const dListStr = LS.getItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY);
+    const sl = JSON.parse(dListStr);
+    if (!dListStr || sl.length === 0) {
+      return null;
     }
-    return this.idSetCache.has(id);
+    const idSet = new Set(sl.map((info) => info.videoId));
+    return (id) => idSet.has(id);
   },
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({ LSDownloadedManager, LSSelectedManager });
