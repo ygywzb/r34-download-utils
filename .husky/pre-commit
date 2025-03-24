@@ -9,4 +9,3 @@ fi
 
 echo "📦 Adding build files to commit..."
 git add .
-exit 1
