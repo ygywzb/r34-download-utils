@@ -1,4 +1,6 @@
 import { DOWNLOADED_KEY, SELECTED_KEY } from './constants';
+
+const LS = localStorage;
 // 持久化存储已经下载的id
 const LSDownloadedManager = {
   cache: undefined,
@@ -65,6 +67,13 @@ const LSSelectedManager = {
     dList.push(info);
     LS.setItem(SELECTED_KEY, JSON.stringify(dList));
     this.cache = dList;
+  },
+  /**
+   * 清空列表
+   */
+  clear() {
+    this.cache = [];
+    LS.removeItem(SELECTED_KEY);
   },
   /**
    * 获取待下载列表

@@ -41,6 +41,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./src/storage/constants.js");
 
+
+const LS = localStorage;
 // 持久化存储已经下载的id
 const LSDownloadedManager = {
   cache: undefined,
@@ -107,6 +109,13 @@ const LSSelectedManager = {
     dList.push(info);
     LS.setItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY, JSON.stringify(dList));
     this.cache = dList;
+  },
+  /**
+   * 清空列表
+   */
+  clear() {
+    this.cache = [];
+    LS.removeItem(_constants__WEBPACK_IMPORTED_MODULE_0__.SELECTED_KEY);
   },
   /**
    * 获取待下载列表
